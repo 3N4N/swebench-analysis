@@ -5,12 +5,6 @@
     <style>
         body { font-family: monospace; margin: 0; padding: 0; }
         .container { display: flex; height: 100vh; }
-        textarea {
-            width: 50%; height: 100%; border: none;
-            padding: 1em; box-sizing: border-box;
-            background: #f9f9f9; resize: none;
-            white-space: pre; overflow-wrap: normal;
-        }
         form { display: flex; flex-direction: column; height: 100%; }
         .topbar { padding: 0.5em; background: #eee; text-align: center; }
         .patch {
@@ -22,6 +16,19 @@
           border-right: 1px solid #ddd;
           width: 50%;
           height: 100%;
+        }
+
+        .bold-button {
+          font-weight: bold !important;
+        }
+
+        .instance-buttons form {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 1em;
+          margin: 1em;
         }
 
         .patch span.add    { color: green; }
@@ -43,29 +50,23 @@
       <button type="submit">Submit</button>
     </form>
 
-    <h3>{{ instance_id }}</h3>
-
-    <div class="buttons">
+    <div class="instance-buttons">
       <form method="post">
-        <button name='instance_choice' value='left' type="submit">left</button>
-        <button name='instance_choice' value='right' type="submit">right</button>
+        <button name='instance_choice' value='left' type="submit">&lt;</button>
+        <label for='instance_choice'><h3>{{ instance_id }}</h3></label>
+        <button name='instance_choice' value='right' type="submit">&gt;</button>
       </form>
     </div>
 
-    <h4>{{ model }}</h4>
-    <div class="buttons">
+    <div class="model-buttons">
       <form method="post">
-        <button name='action' value='model1' type="submit">{{model1}}</button>
-        <button name='action' value='model2' type="submit">{{model2}}</button>
-        <button name='action' value='model3' type="submit">{{model3}}</button>
+        <button name='action' value='model1' class="{% if model == model1 %}bold-button{% endif %}">{{model1}}</button>
+        <button name='action' value='model2' class="{% if model == model2 %}bold-button{% endif %}">{{model2}}</button>
+        <button name='action' value='model3' class="{% if model == model3 %}bold-button{% endif %}">{{model3}}</button>
       </form>
     </div>
-
   </div>
-  <!-- <div class="container"> -->
-  <!--     <textarea name="left" placeholder="Paste left patch here">{{ left }}</textarea> -->
-  <!--     <textarea name="right" placeholder="Paste right patch here">{{ right }}</textarea> -->
-  <!-- </div> -->
+
   <div class="container">
     <pre class="patch">
         {% for line in left.splitlines() %}
