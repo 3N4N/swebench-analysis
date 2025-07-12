@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import pandas as pd
+import pyperclip as pclip
 
 app = Flask(__name__)
 
@@ -28,6 +29,11 @@ def get_patches(df, model, instance_id):
 
     return patch_gold, patch_model
 
+def copy_patches(patch_gold, patch_model, instance_id=None, model=None):
+    text = "\"{}\"\n\"{}\"\n".format(patch_gold, patch_model)
+    print(f"Copied {instance_id} for {model}")
+    pclip.copy(text)
+
 @app.route("/", methods=["GET", "POST"])
 def compare():
     global model
@@ -38,12 +44,12 @@ def compare():
     df = pd.read_json('merged.jsonl', lines=True)
 
     if request.method == "POST":
-        action = request.form.get("action")
-        if action == 'model1':
+        clicked_on = request.form.get("model")
+        if clicked_on == 'model1':
             model = models[0]
-        elif action == 'model2':
+        elif clicked_on == 'model2':
             model = models[1]
-        elif action == 'model3':
+        elif clicked_on == 'model3':
             model = models[2]
 
         selected_instance = request.form.get("instance_choice")
@@ -59,6 +65,12 @@ def compare():
     # print(instance_id)
 
     left_patch, right_patch = get_patches(df, model, instance_id)
+
+    if request.method == "POST":
+        clicked_on = request.form.get("copy")
+        if clicked_on == 'copy':
+            copy_patches(left_patch, right_patch, instance_id, model)
+
     return render_template("compare.html", left=left_patch, right=right_patch,
                            instance_id=instance_id, model=model, model1=models[0],
                            model2=models[1], model3=models[2], instance_list=instances)

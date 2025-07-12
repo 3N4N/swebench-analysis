@@ -31,6 +31,24 @@
           margin: 1em;
         }
 
+        .model-buttons form {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 1em;
+          margin: 1em;
+        }
+
+        .copy-buttons button {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          font-size: 16px;
+          cursor: pointer;
+          z-index: 1000;
+        }
+
         .patch span.add    { color: green; }
         .patch span.del    { color: red; }
         .patch span.hunk   { color: blue; font-weight: bold; }
@@ -50,6 +68,12 @@
       <button type="submit">Submit</button>
     </form>
 
+    <div class="copy-buttons">
+      <form method="post">
+        <button name='copy' value='copy'>COPY</button>
+      </form>
+    </div>
+
     <div class="instance-buttons">
       <form method="post">
         <button name='instance_choice' value='left' type="submit">&lt;</button>
@@ -60,9 +84,9 @@
 
     <div class="model-buttons">
       <form method="post">
-        <button name='action' value='model1' class="{% if model == model1 %}bold-button{% endif %}">{{model1}}</button>
-        <button name='action' value='model2' class="{% if model == model2 %}bold-button{% endif %}">{{model2}}</button>
-        <button name='action' value='model3' class="{% if model == model3 %}bold-button{% endif %}">{{model3}}</button>
+        <button name='model' value='model1' class="{% if model == model1 %}bold-button{% endif %}">{{model1}}</button>
+        <button name='model' value='model2' class="{% if model == model2 %}bold-button{% endif %}">{{model2}}</button>
+        <button name='model' value='model3' class="{% if model == model3 %}bold-button{% endif %}">{{model3}}</button>
       </form>
     </div>
   </div>
