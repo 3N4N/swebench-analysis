@@ -33,32 +33,51 @@
 </head>
 <body>
   <div class="topbar">
-      <h3>{{ instance_id }}</h3>
-      <h3>{{ model }}</h3>
-      <div class="buttons">
-            <form method="post">
-                <button name='action' value='model1' type="submit">{{model1}}</button>
-                <button name='action' value='model2' type="submit">{{model2}}</button>
-                <button name='action' value='model3' type="submit">{{model3}}</button>
-            </form>
-        </div>
+    <form method="post">
+      <input list="instances" name="instance_choice" id="instance-choice">
+      <datalist id="instances">
+        {% for instance_id in instance_list %}
+        <option value="{{ instance_id }}">
+        {% endfor %}
+      </datalist>
+      <button type="submit">Submit</button>
+    </form>
+
+    <h3>{{ instance_id }}</h3>
+
+    <div class="buttons">
+      <form method="post">
+        <button name='instance_choice' value='left' type="submit">left</button>
+        <button name='instance_choice' value='right' type="submit">right</button>
+      </form>
+    </div>
+
+    <h4>{{ model }}</h4>
+    <div class="buttons">
+      <form method="post">
+        <button name='action' value='model1' type="submit">{{model1}}</button>
+        <button name='action' value='model2' type="submit">{{model2}}</button>
+        <button name='action' value='model3' type="submit">{{model3}}</button>
+      </form>
+    </div>
+
   </div>
-    <!-- <div class="container"> -->
-    <!--     <textarea name="left" placeholder="Paste left patch here">{{ left }}</textarea> -->
-    <!--     <textarea name="right" placeholder="Paste right patch here">{{ right }}</textarea> -->
-    <!-- </div> -->
-    <div class="container">
-      <pre class="patch">
+  <!-- <div class="container"> -->
+  <!--     <textarea name="left" placeholder="Paste left patch here">{{ left }}</textarea> -->
+  <!--     <textarea name="right" placeholder="Paste right patch here">{{ right }}</textarea> -->
+  <!-- </div> -->
+  <div class="container">
+    <pre class="patch">
         {% for line in left.splitlines() %}
         <span class="{% if line.startswith('+') %}add{% elif line.startswith('-') %}del{% elif line.startswith('@@') %}hunk{% else %}normal{% endif %}">{{ line }}</span>
         {% endfor %}
-      </pre>
+    </pre>
 
-      <pre class="patch">
+    <pre class="patch">
         {% for line in right.splitlines() %}
         <span class="{% if line.startswith('+') %}add{% elif line.startswith('-') %}del{% elif line.startswith('@@') %}hunk{% else %}normal{% endif %}">{{ line }}</span>
         {% endfor %}
-      </pre>
-    </div>
+    </pre>
+  </div>
 </body>
 </html>
