@@ -78,3 +78,63 @@ for model in models:
 # df = df.head(10)
 
 df.to_json('merged.jsonl', orient='records', lines=True)
+
+
+
+
+df = pd.read_csv('verilite.csv')
+incomplete_instances = df[
+        df['Pattern for AutoCodeRover'].isin(['Incorrect','Incomplete']) \
+        | df['Pattern for OpenHands'].isin(['Incorrect','Incomplete']) \
+        | df['Pattern for SWE-Agent'].isin(['Incorrect','Incomplete']) \
+]['instance_id'].tolist()
+
+import csv
+with open('incomplete_instances.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+            writer.writerow(incomplete_instances)
+
+
+
+problem_statements = df_swebf['problem_statement'].tolist()
+
+
+def get_locality(patch):
+    localities = { }
+    lines = patch.split('\n')
+    parsing = False
+    filepath = None
+    for line in lines:
+        if line.startswith('---'):
+            filepath = line[6:]
+        elif line.startswith('@@'):
+            ind = line.index('@@', len('@@'))
+            signature = line[ind+len('@@')+1:]
+            localities.setdefault(filepath, []).append(signature)
+    return localities
+
+localities = []
+for _, instance in df.iterrows():
+    patch = instance[models[0]]
+    # print(patch)
+    _localities = get_locality(patch)
+    localities.append(_localities)
+    if len(_localities) > 1:
+        print(patch)
+        print(_localities)
+    # break
+
+cnt = 0
+x = []
+for _, instance in df.iterrows():
+    z = instance['FAIL_TO_PASS']
+    z = ast.literal_eval(z)
+    if len(z) >= 0:
+        patch = instance['test_patch']
+        if '+def ' not in patch:
+            x.append(instance['instance_id'])
+            print(instance['instance_id'])
+            print('-'*10)
+            print(patch)
+        else:
+            cnt += 1
